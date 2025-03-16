@@ -115,42 +115,23 @@ return {
         end
     },
 
-    -- rust-tools.nvim (Rust開発をさらに強化)
     {
-        "simrat39/rust-tools.nvim",
-        dependencies = { "neovim/nvim-lspconfig" },
-        ft = { "rust" },
+        'mrcjkb/rustaceanvim',
+        version = '^5', -- Recommended
+        lazy = false,   -- このプラグインは既に lazy ではありません
         config = function()
-            local rt = require("rust-tools")
-            rt.setup({
-                server = {
-                    settings = {
-                        ["rust-analyzer"] = {
-                            checkOnSave = {
-                                command = "clippy",
-                            },
-                        },
-                    },
-                    on_attach = function(_, bufnr)
-                        -- Hover action
-                        vim.keymap.set("n", "<Leader>rh", rt.hover_actions.hover_actions, { buffer = bufnr })
-                        -- Code action groups
-                        vim.keymap.set("n", "<Leader>ra", rt.code_action_group.code_action_group, { buffer = bufnr })
+            -- rustaceanvim の設定があればここに書く
 
-                        -- InsertLeave で自動フォーマット
-                        vim.api.nvim_create_autocmd("InsertLeave", {
-                            group = vim.api.nvim_create_augroup("RustAutoFormat", { clear = true }),
-                            buffer = bufnr,
-                            callback = function()
-                                vim.lsp.buf.format()
-                            end,
-                        })
-                    end,
-                },
+            -- InsertLeave 時に自動フォーマット
+            vim.api.nvim_create_autocmd("InsertLeave", {
+                pattern = "*.rs",
+                callback = function()
+                    -- Neovim 0.8 以降で推奨されるフォーマット手法
+                    vim.lsp.buf.format({ async = false })
+                end,
             })
         end
     },
-
     -- gruvbox (ダークハード)
     {
         "ellisonleao/gruvbox.nvim",
@@ -194,5 +175,16 @@ return {
     -- ターミナルを開ける
     {
         { 'akinsho/toggleterm.nvim', version = "*", config = true }
-    }
+    },
+    -- bracketの対応関係を示してくれる
+    {
+        "shellRaining/hlchunk.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            require("hlchunk").setup({
+                chunk = { enable = true },
+                indent = { enable = true }
+            })
+        end
+    },
 }

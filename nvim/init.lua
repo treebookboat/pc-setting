@@ -69,3 +69,13 @@ vim.api.nvim_set_keymap("i", "<C-l>", "<Right>", { noremap = true, silent = true
 
 -- neovimがシステムクリップボードへのアクセスを自動化する
 vim.opt.clipboard = "unnamedplus"
+
+-- ターミナルの真の色を有効にする
+vim.o.termguicolors = true
+
+-- 背景色を透明に設定
+vim.cmd [[
+  highlight Normal guibg=none
+  highlight NormalNC guibg=none
+  highlight SignColumn guibg=none
+]]
